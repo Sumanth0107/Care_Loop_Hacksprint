@@ -15,6 +15,7 @@ def test_journey_has_contract_shape(monkeypatch) -> None:
     )
     response = TestClient(app).get(f"/api/patients/{DEMO_PATIENT_ID}/care-journey")
     assert response.status_code == 200
+
     data = response.json()["data"]
     assert set(data) == {
         "patient",
