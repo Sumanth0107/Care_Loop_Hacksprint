@@ -144,6 +144,18 @@ function formatDependency(dependency: CareJourneyDependency): string {
   return `${dependency.requirement_type} · ${dependency.satisfied ? 'Satisfied' : 'Not satisfied'}`
 }
 
+function formatTimestamp(value: string | null | undefined): string {
+  if (!value) return 'Not recorded'
+  const date = new Date(value)
+  return Number.isNaN(date.getTime())
+    ? value
+    : new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+}
+
+function formatJsonState(value: Record<string, unknown> | null): string {
+  return value === null ? 'Not recorded' : JSON.stringify(value, null, 2)
+}
+
 const patientId = import.meta.env.VITE_PATIENT_ID?.trim() ?? ''
 
 const navigationItems = [
@@ -173,11 +185,12 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
-    void loadCoordinatorDashboard(patientId, { signal: controller.signal }).then((data) => {
-      if (!controller.signal.aborted) {
-        setDashboard(data)
-      }
-    })
+    void loadCoordinatorDashboard(
+      patientId,
+      { signal: controller.signal },
+      undefined,
+      (state) => setDashboard(state),
+    )
     return () => controller.abort()
   }, [])
 
@@ -207,8 +220,9 @@ function App() {
         <nav className="primary-nav" aria-label="Dashboard sections">
           {navigationItems.map((item) => (
             <a
-            aria-current={item.href === activeSection ? 'page' : undefined}
-            className={`primary-nav__link${item.href === activeSection ? ' is-active' : ''}`}
+              aria-label={item.label}
+              aria-current={item.href === activeSection ? 'page' : undefined}
+              className={`primary-nav__link${item.href === activeSection ? ' is-active' : ''}`}
               href={item.href}
               key={item.href}
             >
@@ -220,10 +234,16 @@ function App() {
                   aria-label={
                     dashboard.exceptions.status === 'success'
                       ? `${exceptions.length} open exceptions returned`
-                      : 'Open exception count unavailable'
+                      : dashboard.exceptions.status === 'empty'
+                        ? 'No open exceptions'
+                        : 'Open exception count unavailable'
                   }
                 >
-                  {dashboard.exceptions.status === 'success' ? exceptions.length : '—'}
+                  {dashboard.exceptions.status === 'success'
+                    ? exceptions.length
+                    : dashboard.exceptions.status === 'empty'
+                      ? 0
+                      : '—'}
                 </span>
               )}
             </a>
@@ -302,7 +322,10 @@ function App() {
                     <strong className="patient-detail__status"><span className="status-dot" />{journey.care_plan.status}</strong>
                   </div>
                 </div>
-                <p className="panel-footnote">Care plan version {journey.care_plan.version}</p>
+                <div className="plan-metadata" aria-label="Care-plan details">
+                  <span>Care-plan ID: <strong>{journey.care_plan.id}</strong></span>
+                  <span>Version: <strong>{journey.care_plan.version}</strong></span>
+                </div>
               </>
             )}
           </section>
@@ -315,9 +338,9 @@ function App() {
               value={journey?.actions.length}
             />
             <MetricCard
-              detail="Open exception total reported by the care journey."
+              detail="Backend open_exception_count includes OPEN and IN_PROGRESS."
               icon="exceptions"
-              label="Open exceptions"
+              label="Journey exception count"
               value={journey?.open_exception_count}
             />
           </section>
@@ -352,15 +375,29 @@ function App() {
                       <th scope="col">Care action</th>
                       <th scope="col">Status</th>
                       <th scope="col">Responsible role</th>
+                      <th scope="col">Schedule and timestamps</th>
                       <th scope="col">Dependencies</th>
                     </tr>
                   </thead>
                   <tbody>
                     {journey.actions.map((action) => (
                       <tr key={action.id}>
-                        <td>{action.title}</td>
+                        <td>
+                          <span className="journey-action-title">{action.title}</span>
+                          <span className="journey-record-id">ID: {action.id}</span>
+                        </td>
                         <td><StatusBadge tone={actionStatusTone(action.status)}>{action.status}</StatusBadge></td>
                         <td>{action.responsible_role}</td>
+                        <td>
+                          <dl className="record-timestamps">
+                            <div><dt>Due</dt><dd>{action.due_at ? formatTimestamp(action.due_at) : 'Not scheduled'}</dd></div>
+                            {action.created_at && <div><dt>Created</dt><dd>{formatTimestamp(action.created_at)}</dd></div>}
+                            {action.updated_at && <div><dt>Updated</dt><dd>{formatTimestamp(action.updated_at)}</dd></div>}
+                            {action.completion_reported_at && <div><dt>Completion reported</dt><dd>{formatTimestamp(action.completion_reported_at)}</dd></div>}
+                            {action.verified_at && <div><dt>Verified</dt><dd>{formatTimestamp(action.verified_at)}</dd></div>}
+                            {action.verified_by && <div><dt>Verified by</dt><dd>{action.verified_by}</dd></div>}
+                          </dl>
+                        </td>
                         <td>{action.dependencies.length > 0 ? action.dependencies.map(formatDependency).join(', ') : 'None'}</td>
                       </tr>
                     ))}
@@ -368,15 +405,61 @@ function App() {
                 </table>
               </div>
             )}
+            {journey && (
+              <div className="journey-subsection">
+                <div className="journey-subsection__heading">
+                  <h3>Handoffs</h3>
+                  <span>From this care journey</span>
+                </div>
+                {journey.handoffs.length === 0 && (
+                  <StateNotice compact kind="empty" title="No handoffs returned" description="The API returned no handoffs for this care journey." />
+                )}
+                {journey.handoffs.length > 0 && (
+                  <div className="handoff-list">
+                    {journey.handoffs.map((handoff) => (
+                      <article className="handoff-card" key={handoff.id}>
+                        <div className="handoff-card__heading">
+                          <div>
+                            <strong>Handoff ID: {handoff.id}</strong>
+                            <span>Related action ID: {handoff.action_id}</span>
+                          </div>
+                          <StatusBadge>{handoff.status}</StatusBadge>
+                        </div>
+                        <dl className="handoff-details">
+                          <div><dt>Recipient role</dt><dd>{handoff.recipient_role ?? 'Not specified'}</dd></div>
+                          <div><dt>Recipient ID</dt><dd>{handoff.recipient_id ?? 'Not specified'}</dd></div>
+                          <div><dt>Deadline</dt><dd>{handoff.deadline_at ? formatTimestamp(handoff.deadline_at) : 'Not scheduled'}</dd></div>
+                          {handoff.sent_at && <div><dt>Sent</dt><dd>{formatTimestamp(handoff.sent_at)}</dd></div>}
+                          {handoff.acknowledged_at && <div><dt>Acknowledged</dt><dd>{formatTimestamp(handoff.acknowledged_at)}</dd></div>}
+                          {handoff.acknowledged_by && <div><dt>Acknowledged by</dt><dd>{handoff.acknowledged_by}</dd></div>}
+                          {handoff.created_at && <div><dt>Created</dt><dd>{formatTimestamp(handoff.created_at)}</dd></div>}
+                          {handoff.updated_at && <div><dt>Updated</dt><dd>{formatTimestamp(handoff.updated_at)}</dd></div>}
+                        </dl>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </section>
 
           <div className="lower-grid">
             <section className="panel exception-panel" id="exceptions" aria-labelledby="exceptions-heading">
               <SectionHeading
-                description="Review open care coordination exceptions returned by the API."
+                description="Exceptions returned by the OPEN status filter."
                 eyebrow="NEEDS ATTENTION"
                 title="Exception queue"
-                action={<StatusBadge tone="warning">{dashboard.exceptions.status === 'success' ? `${exceptions.length} returned` : dashboard.exceptions.status === 'loading' ? 'Loading' : 'Unavailable'}</StatusBadge>}
+                action={
+                  <StatusBadge tone={dashboard.exceptions.status === 'success' ? 'warning' : 'neutral'}>
+                    {dashboard.exceptions.status === 'success'
+                      ? `${exceptions.length} returned`
+                      : dashboard.exceptions.status === 'empty'
+                        ? 'No open exceptions'
+                        : dashboard.exceptions.status === 'loading'
+                          ? 'Loading'
+                          : 'Unavailable'}
+                  </StatusBadge>
+                }
               />
               {dashboard.exceptions.status === 'loading' && (
                 <StateNotice kind="loading" title="Loading open exceptions" description="Requesting open exceptions from the API." />
@@ -393,14 +476,17 @@ function App() {
                     <span className="exception-icon"><Icon name="exceptions" /></span>
                     <div>
                       <strong>{exception.exception_type}</strong>
-                      <span>{exception.status} · {exception.created_at}</span>
+                      <span>{exception.status}</span>
                     </div>
                   </div>
                   <dl className="exception-fields">
+                    <div><dt>Exception ID</dt><dd>{exception.id}</dd></div>
                     <div><dt>Reason</dt><dd>{exception.reason}</dd></div>
                     <div><dt>Assigned role</dt><dd>{exception.assigned_role}</dd></div>
-                    <div><dt>Action ID</dt><dd>{exception.action_id}</dd></div>
-                    <div><dt>Handoff ID</dt><dd>{exception.handoff_id}</dd></div>
+                    <div><dt>Action ID</dt><dd>{exception.action_id ?? 'Not linked'}</dd></div>
+                    <div><dt>Handoff ID</dt><dd>{exception.handoff_id ?? 'Not linked'}</dd></div>
+                    <div><dt>Created</dt><dd>{formatTimestamp(exception.created_at)}</dd></div>
+                    {exception.resolved_at && <div><dt>Resolved</dt><dd>{formatTimestamp(exception.resolved_at)}</dd></div>}
                   </dl>
                 </article>
               ))}
@@ -428,12 +514,42 @@ function App() {
               title="Activity & audit"
               action={<span className="activity-scope"><Icon name="clock" /> All activity</span>}
             />
-            <StateNotice
-              compact
-              kind="empty"
-              title="Audit unavailable"
-              description="Waiting for backend confirmation of audit entity types and response structure."
-            />
+            {dashboard.audit.status === 'loading' && (
+              <StateNotice compact kind="loading" title="Loading audit history" description="Requesting the unfiltered audit history." />
+            )}
+            {dashboard.audit.status === 'empty' && (
+              <StateNotice compact kind="empty" title="No audit entries" description="The API returned no audit history." />
+            )}
+            {dashboard.audit.status === 'error' && (
+              <StateNotice compact kind="error" title="Audit history unavailable" description={dashboard.audit.message} />
+            )}
+            {dashboard.audit.status === 'success' && (
+              <div className="audit-list">
+                {dashboard.audit.data.items.map((entry) => (
+                  <article className="audit-entry" key={entry.id}>
+                    <div className="audit-entry__heading">
+                      <strong>{entry.operation}</strong>
+                      <time dateTime={entry.created_at}>{formatTimestamp(entry.created_at)}</time>
+                    </div>
+                    <dl className="audit-entry__metadata">
+                      <div><dt>Entity</dt><dd>{entry.entity_type} · {entry.entity_id}</dd></div>
+                      <div><dt>Actor</dt><dd>{entry.actor_id ?? 'Not identified'} · {entry.actor_role}</dd></div>
+                      {entry.event_id && <div><dt>Event ID</dt><dd>{entry.event_id}</dd></div>}
+                    </dl>
+                    <div className="audit-entry__states">
+                      <div>
+                        <h3>Before state</h3>
+                        <pre>{formatJsonState(entry.before_state)}</pre>
+                      </div>
+                      <div>
+                        <h3>After state</h3>
+                        <pre>{formatJsonState(entry.after_state)}</pre>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </section>
 
           <footer className="dashboard-footer">

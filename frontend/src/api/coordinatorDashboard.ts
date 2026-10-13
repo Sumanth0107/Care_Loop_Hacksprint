@@ -3,11 +3,12 @@ import {
 } from './client'
 import {
   getExceptions,
+  getAudit,
   getHealth,
   getPatientCareJourney,
   type ApiCallOptions,
 } from './careLoopApi'
-import type { ExceptionListResponse, PatientCareJourney } from './types'
+import type { AuditResponse, ExceptionListResponse, PatientCareJourney } from './types'
 
 export type ResourceState<T> =
   | { status: 'loading' }
@@ -25,18 +26,21 @@ export interface CoordinatorDashboardState {
   health: HealthState
   journey: ResourceState<PatientCareJourney>
   exceptions: ResourceState<ExceptionListResponse>
+  audit: ResourceState<AuditResponse>
 }
 
 export interface CoordinatorDashboardApi {
   getHealth: typeof getHealth
   getPatientCareJourney: typeof getPatientCareJourney
   getExceptions: typeof getExceptions
+  getAudit: typeof getAudit
 }
 
 const defaultApi: CoordinatorDashboardApi = {
   getHealth,
   getPatientCareJourney,
   getExceptions,
+  getAudit,
 }
 
 const patientNotConfigured: ResourceState<PatientCareJourney> = {
@@ -95,6 +99,21 @@ async function loadExceptions(
   }
 }
 
+async function loadAudit(
+  api: CoordinatorDashboardApi,
+  options: ApiCallOptions,
+): Promise<ResourceState<AuditResponse>> {
+  try {
+    const data = await api.getAudit({}, options)
+    if (data === undefined || data.items.length === 0) {
+      return { status: 'empty' }
+    }
+    return { status: 'success', data }
+  } catch (error) {
+    return { status: 'error', message: getRequestErrorMessage(error) }
+  }
+}
+
 export function createInitialCoordinatorDashboardState(
   patientId: string,
 ): CoordinatorDashboardState {
@@ -102,6 +121,7 @@ export function createInitialCoordinatorDashboardState(
     health: { status: 'loading' },
     journey: patientId ? { status: 'loading' } : patientNotConfigured,
     exceptions: { status: 'loading' },
+    audit: { status: 'loading' },
   }
 }
 
@@ -109,12 +129,22 @@ export async function loadCoordinatorDashboard(
   patientId: string,
   options: ApiCallOptions = {},
   api: CoordinatorDashboardApi = defaultApi,
+  onUpdate?: (state: CoordinatorDashboardState) => void,
 ): Promise<CoordinatorDashboardState> {
-  const [health, journey, exceptions] = await Promise.all([
-    loadHealth(api, options),
-    loadJourney(patientId, api, options),
-    loadExceptions(api, options),
+  let currentState = createInitialCoordinatorDashboardState(patientId)
+  const publish = (update: Partial<CoordinatorDashboardState>) => {
+    currentState = { ...currentState, ...update }
+    if (!options.signal?.aborted) {
+      onUpdate?.(currentState)
+    }
+  }
+
+  await Promise.all([
+    loadHealth(api, options).then((health) => publish({ health })),
+    loadJourney(patientId, api, options).then((journey) => publish({ journey })),
+    loadExceptions(api, options).then((exceptions) => publish({ exceptions })),
+    loadAudit(api, options).then((audit) => publish({ audit })),
   ])
 
-  return { health, journey, exceptions }
+  return currentState
 }

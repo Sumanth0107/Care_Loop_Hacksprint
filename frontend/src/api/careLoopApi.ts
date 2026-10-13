@@ -1,6 +1,7 @@
 import { request } from './client'
 import type {
   AuditQuery,
+  AuditResponse,
   ExceptionListQuery,
   ExceptionListResponse,
   HandoffAcknowledgmentRequest,
@@ -47,20 +48,18 @@ export function getExceptions(
   })
 }
 
-/**
- * The contract describes audit entry fields but does not define a complete JSON
- * response shape. Confirm the backend response before connecting this to the UI.
- */
 export function getAudit(
-  query: AuditQuery,
+  query: AuditQuery = {},
   options: ApiCallOptions = {},
-): Promise<unknown | undefined> {
-  const searchParams = new URLSearchParams({
-    entity_type: query.entity_type,
-    entity_id: query.entity_id,
-  })
+): Promise<AuditResponse | undefined> {
+  const searchParams = new URLSearchParams()
+  if (query.entity_type !== undefined) searchParams.set('entity_type', query.entity_type)
+  if (query.entity_id !== undefined) searchParams.set('entity_id', query.entity_id)
 
-  return request<unknown>(`/api/audit?${searchParams.toString()}`, {
+  const search = searchParams.toString()
+  const path = search.length > 0 ? `/api/audit?${search}` : '/api/audit'
+
+  return request<AuditResponse>(path, {
     method: 'GET',
     signal: options.signal,
   })

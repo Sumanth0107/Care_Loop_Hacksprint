@@ -399,7 +399,7 @@
 
 .patient-detail strong {
   color: #53616b;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -420,6 +420,21 @@
   margin: 10px 0 0 51px;
   color: #596972;
   font-size: 12px;
+}
+
+.plan-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 10px 0 0 51px;
+  color: #596972;
+  font-size: 12px;
+}
+
+.plan-metadata strong {
+  color: #35424b;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .metrics-grid {
@@ -505,6 +520,7 @@
 
 .journey-table {
   width: 100%;
+  min-width: 920px;
   border-collapse: collapse;
   text-align: left;
 }
@@ -541,6 +557,50 @@
 .journey-table td:first-child {
   padding-left: 12px;
   font-weight: 600;
+}
+
+.journey-action-title,
+.journey-record-id {
+  display: block;
+}
+
+.journey-record-id {
+  margin-top: 4px;
+  color: #596972;
+  font-size: 12px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.record-timestamps {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.record-timestamps > div,
+.handoff-details > div,
+.audit-entry__metadata > div {
+  display: grid;
+  grid-template-columns: minmax(105px, auto) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.record-timestamps dt,
+.handoff-details dt,
+.audit-entry__metadata dt {
+  color: #596972;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.record-timestamps dd,
+.handoff-details dd,
+.audit-entry__metadata dd {
+  margin: 0;
+  color: #35424b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .journey-table td.table-empty {
@@ -638,6 +698,112 @@
   grid-template-columns: minmax(0, 1.55fr) minmax(250px, 0.85fr);
   gap: 15px;
   margin-top: 15px;
+}
+
+.journey-subsection {
+  display: grid;
+  gap: 10px;
+  margin-top: 19px;
+  padding-top: 16px;
+  border-top: 1px solid #edf0f1;
+}
+
+.journey-subsection__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.journey-subsection__heading h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.journey-subsection__heading > span {
+  color: #596972;
+  font-size: 12px;
+}
+
+.handoff-list,
+.audit-list {
+  display: grid;
+  gap: 10px;
+}
+
+.handoff-card,
+.audit-entry {
+  min-width: 0;
+  padding: 13px;
+  background: #fbfcfc;
+  border: 1px solid #e8edef;
+  border-radius: 7px;
+}
+
+.handoff-card__heading,
+.audit-entry__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.handoff-card__heading > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.handoff-card__heading strong,
+.audit-entry__heading strong {
+  color: #35424b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.handoff-card__heading > div > span,
+.audit-entry__heading time {
+  color: #596972;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.handoff-details,
+.audit-entry__metadata {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0 0;
+}
+
+.exception-fields dd {
+  max-width: 68%;
+  overflow-wrap: anywhere;
+}
+
+.audit-entry__states {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.audit-entry__states h3 {
+  margin: 0 0 5px;
+  color: #596972;
+  font-size: 12px;
+}
+
+.audit-entry__states pre {
+  max-height: 220px;
+  margin: 0;
+  padding: 9px;
+  overflow: auto;
+  color: #35424b;
+  background: #f2f5f6;
+  border-radius: 5px;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .exception-panel {
@@ -1023,6 +1189,12 @@ button:focus-visible {
     line-height: 1.5;
   }
 
+  .plan-metadata {
+    display: grid;
+    gap: 6px;
+    margin: 9px 0 0;
+  }
+
   .metrics-grid {
     gap: 9px;
   }
@@ -1059,7 +1231,7 @@ button:focus-visible {
   }
 
   .journey-table {
-    min-width: 560px;
+    min-width: 920px;
   }
 
   .journey-table th {
@@ -1082,6 +1254,10 @@ button:focus-visible {
 
   .acknowledgment-panel {
     padding: 16px;
+  }
+
+  .audit-entry__states {
+    grid-template-columns: 1fr;
   }
 
   .dashboard-footer {

@@ -305,6 +305,19 @@ describe('CareLoop endpoint functions', () => {
     assert.equal(requestedMethod, 'GET')
   })
 
+  it('requests an unfiltered audit list when no filter is supplied', async (t) => {
+    const api = await loadCareLoopApi(t)
+    let requestedUrl
+    mockFetch(t, async (url) => {
+      requestedUrl = String(url)
+      return jsonResponse({ items: [] })
+    })
+
+    await api.getAudit()
+
+    assert.equal(requestedUrl, 'http://localhost:8000/api/audit')
+  })
+
   it('posts the contract acknowledgment fields to the handoff acknowledgment path', async (t) => {
     const api = await loadCareLoopApi(t)
     let capturedRequest
@@ -375,6 +388,7 @@ describe('coordinator dashboard API states', () => {
           calls.push(`exceptions:${query.status}`)
           return exceptions
         },
+        getAudit: async () => ({ items: [] }),
       },
     )
 
@@ -393,6 +407,7 @@ describe('coordinator dashboard API states', () => {
         getHealth: async () => undefined,
         getPatientCareJourney: async () => undefined,
         getExceptions: async () => undefined,
+        getAudit: async () => undefined,
       },
     )
 
@@ -414,6 +429,7 @@ describe('coordinator dashboard API states', () => {
           return undefined
         },
         getExceptions: async () => ({ items: [], next_cursor: null }),
+        getAudit: async () => ({ items: [] }),
       },
     )
 
@@ -430,11 +446,107 @@ describe('coordinator dashboard API states', () => {
         getHealth: async () => { throw new Error('health failure') },
         getPatientCareJourney: async () => { throw new Error('journey failure') },
         getExceptions: async () => { throw new Error('exception failure') },
+        getAudit: async () => { throw new Error('audit failure') },
       },
     )
 
     assert.deepEqual(state.health, { status: 'error', message: 'The dashboard data request failed.' })
     assert.deepEqual(state.journey, { status: 'error', message: 'The dashboard data request failed.' })
     assert.deepEqual(state.exceptions, { status: 'error', message: 'The dashboard data request failed.' })
+    assert.deepEqual(state.audit, { status: 'error', message: 'The dashboard data request failed.' })
+  })
+
+  it('returns typed audit entries when the unfiltered request has records', async (t) => {
+    const dashboardApi = await loadDashboardApi(t)
+    const audit = {
+      items: [{
+        id: 'audit-id',
+        event_id: null,
+        entity_type: 'care_action',
+        entity_id: 'action-id',
+        operation: 'STATUS_CHANGED',
+        actor_id: 'coordinator',
+        actor_role: 'CARE_COORDINATOR',
+        before_state: { status: 'PENDING' },
+        after_state: { status: 'READY' },
+        created_at: '2026-10-13T08:15:00Z',
+      }],
+    }
+    const state = await dashboardApi.loadCoordinatorDashboard(
+      '',
+      {},
+      {
+        getHealth: async () => undefined,
+        getPatientCareJourney: async () => undefined,
+        getExceptions: async () => ({ items: [], next_cursor: null }),
+        getAudit: async (query) => {
+          assert.deepEqual(query, {})
+          return audit
+        },
+      },
+    )
+
+    assert.deepEqual(state.audit, { status: 'success', data: audit })
+  })
+
+  it('publishes journey success even when the audit request fails slowly', async (t) => {
+    const dashboardApi = await loadDashboardApi(t)
+    let finishAudit
+    const pendingAudit = new Promise((resolve) => {
+      finishAudit = resolve
+    })
+    const journey = {
+      patient: { id: 'patient-id', display_name: 'Test patient' },
+      care_plan: { id: 'plan-id', status: 'APPROVED', version: 1 },
+      actions: [],
+      handoffs: [],
+      active_exceptions: [],
+      open_exception_count: 0,
+    }
+    const published = []
+    const loaded = dashboardApi.loadCoordinatorDashboard(
+      'patient-id',
+      {},
+      {
+        getHealth: async () => undefined,
+        getPatientCareJourney: async () => journey,
+        getExceptions: async () => ({ items: [], next_cursor: null }),
+        getAudit: async () => pendingAudit,
+      },
+      (state) => published.push(state),
+    )
+
+    await new Promise((resolve) => setImmediate(resolve))
+    assert.ok(published.some((state) => state.journey.status === 'success'))
+    assert.ok(published.every((state) => state.audit.status === 'loading'))
+
+    finishAudit(new Error('audit unavailable'))
+    const finalState = await loaded
+    assert.deepEqual(finalState.audit, {
+      status: 'error',
+      message: 'The dashboard data request failed.',
+    })
+  })
+
+  it('does not publish updates after its request signal is aborted', async (t) => {
+    const dashboardApi = await loadDashboardApi(t)
+    const controller = new AbortController()
+    const updates = []
+    const loaded = dashboardApi.loadCoordinatorDashboard(
+      '',
+      { signal: controller.signal },
+      {
+        getHealth: async () => undefined,
+        getPatientCareJourney: async () => undefined,
+        getExceptions: async () => ({ items: [], next_cursor: null }),
+        getAudit: async () => ({ items: [] }),
+      },
+      (state) => updates.push(state),
+    )
+    controller.abort()
+
+    await loaded
+
+    assert.deepEqual(updates, [])
   })
 })
