@@ -1,0 +1,3 @@
+-- Multi-row state changes should be moved into PostgreSQL functions/RPCs before production.
+-- The development scaffold keeps the state machine in the service layer and uses
+-- the in-memory store until Supabase credentials and transactional RPCs are configured.
