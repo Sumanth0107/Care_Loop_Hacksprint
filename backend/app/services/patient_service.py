@@ -121,8 +121,6 @@ def get_journey(patient_id: UUID) -> dict:
             "patient": journey["patient"],
             "care_plan": plan,
             "actions": journey_actions,
-            "handoffs": handoffs,
-            "active_exceptions": active_exceptions,
             "open_exception_count": len(active_exceptions),
         }
 
@@ -195,8 +193,6 @@ def get_journey(patient_id: UUID) -> dict:
         "patient": patient,
         "care_plan": plan,
         "actions": journey_actions,
-        "handoffs": handoffs,
-        "active_exceptions": active_exceptions,
         "open_exception_count": len(active_exceptions),
     }
 

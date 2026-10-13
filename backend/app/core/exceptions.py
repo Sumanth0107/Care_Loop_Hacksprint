@@ -6,6 +6,9 @@ class CareLoopError(Exception):
         self.status_code = status_code
         self.details = details or {}
 
+    def __str__(self) -> str:
+        return f"{self.code}: {self.message}"
+
 
 class ResourceNotFoundError(CareLoopError):
     def __init__(self, resource: str, resource_id: str):
