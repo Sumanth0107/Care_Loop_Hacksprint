@@ -22,7 +22,7 @@ def update_exception(exception_id: UUID, payload: ExceptionPatch) -> dict:
     if exception is None:
         raise CareLoopError("RESOURCE_NOT_FOUND", f"Exception '{exception_id}' does not exist.", 404)
     allowed = {
-        "OPEN": {"IN_PROGRESS", "DISMISSED"},
+        "OPEN": {"IN_PROGRESS", "RESOLVED", "DISMISSED"},
         "IN_PROGRESS": {"RESOLVED", "DISMISSED"},
     }
     if payload.status not in allowed.get(exception["status"], set()):

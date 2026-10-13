@@ -26,6 +26,12 @@ def get_database() -> InMemoryDatabase:
     return _database
 
 
+def reset_database() -> InMemoryDatabase:
+    global _database
+    _database = InMemoryDatabase()
+    return _database
+
+
 def get_supabase_client(settings: Settings | None = None) -> Any | None:
     global _supabase_client
     settings = settings or get_settings()
