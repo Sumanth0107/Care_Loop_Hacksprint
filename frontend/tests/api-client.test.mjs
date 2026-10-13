@@ -342,6 +342,15 @@ describe('CareLoop endpoint functions', () => {
 })
 
 describe('coordinator dashboard API states', () => {
+  it('distinguishes missing handoff data from an empty handoff list', async (t) => {
+    const dashboardApi = await loadDashboardApi(t)
+
+    assert.equal(dashboardApi.getJourneyHandoffsState(undefined), 'not-provided')
+    assert.equal(dashboardApi.getJourneyHandoffsState(null), 'not-provided')
+    assert.equal(dashboardApi.getJourneyHandoffsState([]), 'empty')
+    assert.equal(dashboardApi.getJourneyHandoffsState([{ id: 'handoff-id' }]), 'available')
+  })
+
   it('starts with loading states and marks an absent patient as not configured', async (t) => {
     const dashboardApi = await loadDashboardApi(t)
     const state = dashboardApi.createInitialCoordinatorDashboardState('')
@@ -352,7 +361,7 @@ describe('coordinator dashboard API states', () => {
     assert.match(state.journey.message, /VITE_PATIENT_ID/)
   })
 
-  it('loads journey, open exceptions, and health successfully', async (t) => {
+  it('loads a journey successfully when the backend omits the optional handoffs field', async (t) => {
     const dashboardApi = await loadDashboardApi(t)
     const journey = {
       patient: { id: 'patient-id', display_name: 'Test patient' },
@@ -394,6 +403,7 @@ describe('coordinator dashboard API states', () => {
 
     assert.equal(state.health.status, 'connected')
     assert.deepEqual(state.journey, { status: 'success', data: journey })
+    assert.equal(Object.hasOwn(state.journey.data, 'handoffs'), false)
     assert.deepEqual(state.exceptions, { status: 'success', data: exceptions })
     assert.deepEqual(calls.sort(), ['exceptions:OPEN', 'health', 'journey:patient-id'])
   })

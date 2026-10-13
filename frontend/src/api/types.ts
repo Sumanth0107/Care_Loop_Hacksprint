@@ -93,7 +93,7 @@ export interface PatientCareJourney {
   patient: CareJourneyPatient
   care_plan: CareJourneyPlan
   actions: CareJourneyAction[]
-  handoffs: CareJourneyHandoff[]
+  handoffs?: CareJourneyHandoff[] | null
   active_exceptions: CareJourneyException[]
   open_exception_count: number
 }

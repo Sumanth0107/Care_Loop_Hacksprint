@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import {
   createInitialCoordinatorDashboardState,
+  getJourneyHandoffsState,
   loadCoordinatorDashboard,
   type CoordinatorDashboardState,
 } from './api/coordinatorDashboard'
@@ -196,6 +197,8 @@ function App() {
 
   const activeNavigationItem = navigationItems.find((item) => item.href === activeSection) ?? navigationItems[0]
   const journey = dashboard.journey.status === 'success' ? dashboard.journey.data : undefined
+  const handoffs = journey?.handoffs
+  const handoffsState = getJourneyHandoffsState(handoffs)
   const exceptions = dashboard.exceptions.status === 'success' ? dashboard.exceptions.data.items : []
   const healthMessage =
     dashboard.health.status === 'connected'
@@ -411,12 +414,15 @@ function App() {
                   <h3>Handoffs</h3>
                   <span>From this care journey</span>
                 </div>
-                {journey.handoffs.length === 0 && (
+                {handoffsState === 'not-provided' && (
+                  <StateNotice compact kind="empty" title="Handoff data not provided" description="The care-journey response did not include a handoffs field." />
+                )}
+                {handoffsState === 'empty' && (
                   <StateNotice compact kind="empty" title="No handoffs returned" description="The API returned no handoffs for this care journey." />
                 )}
-                {journey.handoffs.length > 0 && (
+                {handoffsState === 'available' && handoffs && (
                   <div className="handoff-list">
-                    {journey.handoffs.map((handoff) => (
+                    {handoffs.map((handoff) => (
                       <article className="handoff-card" key={handoff.id}>
                         <div className="handoff-card__heading">
                           <div>

@@ -8,7 +8,21 @@ import {
   getPatientCareJourney,
   type ApiCallOptions,
 } from './careLoopApi'
-import type { AuditResponse, ExceptionListResponse, PatientCareJourney } from './types'
+import type {
+  AuditResponse,
+  CareJourneyHandoff,
+  ExceptionListResponse,
+  PatientCareJourney,
+} from './types'
+
+export type JourneyHandoffsState = 'not-provided' | 'empty' | 'available'
+
+export function getJourneyHandoffsState(
+  handoffs: CareJourneyHandoff[] | null | undefined,
+): JourneyHandoffsState {
+  if (handoffs == null) return 'not-provided'
+  return handoffs.length === 0 ? 'empty' : 'available'
+}
 
 export type ResourceState<T> =
   | { status: 'loading' }
