@@ -1,0 +1,1399 @@
+﻿{
+    "openapi":  "3.1.0",
+    "info":  {
+                 "title":  "CareLoop API",
+                 "version":  "0.1.0"
+             },
+    "paths":  {
+                  "/api/health":  {
+                                      "get":  {
+                                                  "tags":  [
+                                                               "health"
+                                                           ],
+                                                  "summary":  "Health",
+                                                  "operationId":  "health_api_health_get",
+                                                  "responses":  {
+                                                                    "200":  {
+                                                                                "description":  "Successful Response",
+                                                                                "content":  {
+                                                                                                "application/json":  {
+                                                                                                                         "schema":  {
+                                                                                                                                        "additionalProperties":  true,
+                                                                                                                                        "type":  "object",
+                                                                                                                                        "title":  "Response Health Api Health Get"
+                                                                                                                                    }
+                                                                                                                     }
+                                                                                            }
+                                                                            }
+                                                                }
+                                              }
+                                  },
+                  "/api/patients/{patient_id}/care-journey":  {
+                                                                  "get":  {
+                                                                              "tags":  [
+                                                                                           "patients"
+                                                                                       ],
+                                                                              "summary":  "Care Journey",
+                                                                              "operationId":  "care_journey_api_patients__patient_id__care_journey_get",
+                                                                              "parameters":  [
+                                                                                                 {
+                                                                                                     "name":  "patient_id",
+                                                                                                     "in":  "path",
+                                                                                                     "required":  true,
+                                                                                                     "schema":  {
+                                                                                                                    "type":  "string",
+                                                                                                                    "format":  "uuid",
+                                                                                                                    "title":  "Patient Id"
+                                                                                                                }
+                                                                                                 }
+                                                                                             ],
+                                                                              "responses":  {
+                                                                                                "200":  {
+                                                                                                            "description":  "Successful Response",
+                                                                                                            "content":  {
+                                                                                                                            "application/json":  {
+                                                                                                                                                     "schema":  {
+                                                                                                                                                                    "type":  "object",
+                                                                                                                                                                    "additionalProperties":  true,
+                                                                                                                                                                    "title":  "Response Care Journey Api Patients  Patient Id  Care Journey Get"
+                                                                                                                                                                }
+                                                                                                                                                 }
+                                                                                                                        }
+                                                                                                        },
+                                                                                                "422":  {
+                                                                                                            "description":  "Validation Error",
+                                                                                                            "content":  {
+                                                                                                                            "application/json":  {
+                                                                                                                                                     "schema":  {
+                                                                                                                                                                    "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                                }
+                                                                                                                                                 }
+                                                                                                                        }
+                                                                                                        }
+                                                                                            }
+                                                                          }
+                                                              },
+                  "/api/care-plans/{plan_id}":  {
+                                                    "get":  {
+                                                                "tags":  [
+                                                                             "patients"
+                                                                         ],
+                                                                "summary":  "Care Plan",
+                                                                "operationId":  "care_plan_api_care_plans__plan_id__get",
+                                                                "parameters":  [
+                                                                                   {
+                                                                                       "name":  "plan_id",
+                                                                                       "in":  "path",
+                                                                                       "required":  true,
+                                                                                       "schema":  {
+                                                                                                      "type":  "string",
+                                                                                                      "format":  "uuid",
+                                                                                                      "title":  "Plan Id"
+                                                                                                  }
+                                                                                   }
+                                                                               ],
+                                                                "responses":  {
+                                                                                  "200":  {
+                                                                                              "description":  "Successful Response",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "type":  "object",
+                                                                                                                                                      "additionalProperties":  true,
+                                                                                                                                                      "title":  "Response Care Plan Api Care Plans  Plan Id  Get"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          },
+                                                                                  "422":  {
+                                                                                              "description":  "Validation Error",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          }
+                                                                              }
+                                                            }
+                                                },
+                  "/api/care-plans":  {
+                                          "post":  {
+                                                       "tags":  [
+                                                                    "patients"
+                                                                ],
+                                                       "summary":  "Create Care Plan",
+                                                       "operationId":  "create_care_plan_api_care_plans_post",
+                                                       "requestBody":  {
+                                                                           "content":  {
+                                                                                           "application/json":  {
+                                                                                                                    "schema":  {
+                                                                                                                                   "$ref":  "#/components/schemas/CarePlanCreate"
+                                                                                                                               }
+                                                                                                                }
+                                                                                       },
+                                                                           "required":  true
+                                                                       },
+                                                       "responses":  {
+                                                                         "201":  {
+                                                                                     "description":  "Successful Response",
+                                                                                     "content":  {
+                                                                                                     "application/json":  {
+                                                                                                                              "schema":  {
+                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                             "type":  "object",
+                                                                                                                                             "title":  "Response Create Care Plan Api Care Plans Post"
+                                                                                                                                         }
+                                                                                                                          }
+                                                                                                 }
+                                                                                 },
+                                                                         "422":  {
+                                                                                     "description":  "Validation Error",
+                                                                                     "content":  {
+                                                                                                     "application/json":  {
+                                                                                                                              "schema":  {
+                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                         }
+                                                                                                                          }
+                                                                                                 }
+                                                                                 }
+                                                                     }
+                                                   }
+                                      },
+                  "/api/care-plans/{plan_id}/parse":  {
+                                                          "post":  {
+                                                                       "tags":  [
+                                                                                    "patients"
+                                                                                ],
+                                                                       "summary":  "Parse Care Plan",
+                                                                       "operationId":  "parse_care_plan_api_care_plans__plan_id__parse_post",
+                                                                       "parameters":  [
+                                                                                          {
+                                                                                              "name":  "plan_id",
+                                                                                              "in":  "path",
+                                                                                              "required":  true,
+                                                                                              "schema":  {
+                                                                                                             "type":  "string",
+                                                                                                             "format":  "uuid",
+                                                                                                             "title":  "Plan Id"
+                                                                                                         }
+                                                                                          }
+                                                                                      ],
+                                                                       "responses":  {
+                                                                                         "200":  {
+                                                                                                     "description":  "Successful Response",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "type":  "object",
+                                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                                             "title":  "Response Parse Care Plan Api Care Plans  Plan Id  Parse Post"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 },
+                                                                                         "422":  {
+                                                                                                     "description":  "Validation Error",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 }
+                                                                                     }
+                                                                   }
+                                                      },
+                  "/api/care-plans/{plan_id}/approve":  {
+                                                            "post":  {
+                                                                         "tags":  [
+                                                                                      "patients"
+                                                                                  ],
+                                                                         "summary":  "Approve Care Plan",
+                                                                         "operationId":  "approve_care_plan_api_care_plans__plan_id__approve_post",
+                                                                         "parameters":  [
+                                                                                            {
+                                                                                                "name":  "plan_id",
+                                                                                                "in":  "path",
+                                                                                                "required":  true,
+                                                                                                "schema":  {
+                                                                                                               "type":  "string",
+                                                                                                               "format":  "uuid",
+                                                                                                               "title":  "Plan Id"
+                                                                                                           }
+                                                                                            }
+                                                                                        ],
+                                                                         "responses":  {
+                                                                                           "200":  {
+                                                                                                       "description":  "Successful Response",
+                                                                                                       "content":  {
+                                                                                                                       "application/json":  {
+                                                                                                                                                "schema":  {
+                                                                                                                                                               "type":  "object",
+                                                                                                                                                               "additionalProperties":  true,
+                                                                                                                                                               "title":  "Response Approve Care Plan Api Care Plans  Plan Id  Approve Post"
+                                                                                                                                                           }
+                                                                                                                                            }
+                                                                                                                   }
+                                                                                                   },
+                                                                                           "422":  {
+                                                                                                       "description":  "Validation Error",
+                                                                                                       "content":  {
+                                                                                                                       "application/json":  {
+                                                                                                                                                "schema":  {
+                                                                                                                                                               "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                           }
+                                                                                                                                            }
+                                                                                                                   }
+                                                                                                   }
+                                                                                       }
+                                                                     }
+                                                        },
+                  "/api/care-actions/{action_id}":  {
+                                                        "get":  {
+                                                                    "tags":  [
+                                                                                 "care-actions"
+                                                                             ],
+                                                                    "summary":  "Care Action",
+                                                                    "operationId":  "care_action_api_care_actions__action_id__get",
+                                                                    "parameters":  [
+                                                                                       {
+                                                                                           "name":  "action_id",
+                                                                                           "in":  "path",
+                                                                                           "required":  true,
+                                                                                           "schema":  {
+                                                                                                          "type":  "string",
+                                                                                                          "format":  "uuid",
+                                                                                                          "title":  "Action Id"
+                                                                                                      }
+                                                                                       }
+                                                                                   ],
+                                                                    "responses":  {
+                                                                                      "200":  {
+                                                                                                  "description":  "Successful Response",
+                                                                                                  "content":  {
+                                                                                                                  "application/json":  {
+                                                                                                                                           "schema":  {
+                                                                                                                                                          "type":  "object",
+                                                                                                                                                          "additionalProperties":  true,
+                                                                                                                                                          "title":  "Response Care Action Api Care Actions  Action Id  Get"
+                                                                                                                                                      }
+                                                                                                                                       }
+                                                                                                              }
+                                                                                              },
+                                                                                      "422":  {
+                                                                                                  "description":  "Validation Error",
+                                                                                                  "content":  {
+                                                                                                                  "application/json":  {
+                                                                                                                                           "schema":  {
+                                                                                                                                                          "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                      }
+                                                                                                                                       }
+                                                                                                              }
+                                                                                              }
+                                                                                  }
+                                                                }
+                                                    },
+                  "/api/care-actions/{action_id}/start":  {
+                                                              "post":  {
+                                                                           "tags":  [
+                                                                                        "care-actions"
+                                                                                    ],
+                                                                           "summary":  "Start Action",
+                                                                           "operationId":  "start_action_api_care_actions__action_id__start_post",
+                                                                           "parameters":  [
+                                                                                              {
+                                                                                                  "name":  "action_id",
+                                                                                                  "in":  "path",
+                                                                                                  "required":  true,
+                                                                                                  "schema":  {
+                                                                                                                 "type":  "string",
+                                                                                                                 "format":  "uuid",
+                                                                                                                 "title":  "Action Id"
+                                                                                                             }
+                                                                                              }
+                                                                                          ],
+                                                                           "requestBody":  {
+                                                                                               "required":  true,
+                                                                                               "content":  {
+                                                                                                               "application/json":  {
+                                                                                                                                        "schema":  {
+                                                                                                                                                       "$ref":  "#/components/schemas/ActionEventRequest"
+                                                                                                                                                   }
+                                                                                                                                    }
+                                                                                                           }
+                                                                                           },
+                                                                           "responses":  {
+                                                                                             "200":  {
+                                                                                                         "description":  "Successful Response",
+                                                                                                         "content":  {
+                                                                                                                         "application/json":  {
+                                                                                                                                                  "schema":  {
+                                                                                                                                                                 "type":  "object",
+                                                                                                                                                                 "additionalProperties":  true,
+                                                                                                                                                                 "title":  "Response Start Action Api Care Actions  Action Id  Start Post"
+                                                                                                                                                             }
+                                                                                                                                              }
+                                                                                                                     }
+                                                                                                     },
+                                                                                             "422":  {
+                                                                                                         "description":  "Validation Error",
+                                                                                                         "content":  {
+                                                                                                                         "application/json":  {
+                                                                                                                                                  "schema":  {
+                                                                                                                                                                 "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                             }
+                                                                                                                                              }
+                                                                                                                     }
+                                                                                                     }
+                                                                                         }
+                                                                       }
+                                                          },
+                  "/api/care-actions/{action_id}/report-completion":  {
+                                                                          "post":  {
+                                                                                       "tags":  [
+                                                                                                    "care-actions"
+                                                                                                ],
+                                                                                       "summary":  "Report Completion",
+                                                                                       "operationId":  "report_completion_api_care_actions__action_id__report_completion_post",
+                                                                                       "parameters":  [
+                                                                                                          {
+                                                                                                              "name":  "action_id",
+                                                                                                              "in":  "path",
+                                                                                                              "required":  true,
+                                                                                                              "schema":  {
+                                                                                                                             "type":  "string",
+                                                                                                                             "format":  "uuid",
+                                                                                                                             "title":  "Action Id"
+                                                                                                                         }
+                                                                                                          }
+                                                                                                      ],
+                                                                                       "requestBody":  {
+                                                                                                           "required":  true,
+                                                                                                           "content":  {
+                                                                                                                           "application/json":  {
+                                                                                                                                                    "schema":  {
+                                                                                                                                                                   "$ref":  "#/components/schemas/ActionEventRequest"
+                                                                                                                                                               }
+                                                                                                                                                }
+                                                                                                                       }
+                                                                                                       },
+                                                                                       "responses":  {
+                                                                                                         "200":  {
+                                                                                                                     "description":  "Successful Response",
+                                                                                                                     "content":  {
+                                                                                                                                     "application/json":  {
+                                                                                                                                                              "schema":  {
+                                                                                                                                                                             "type":  "object",
+                                                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                                                             "title":  "Response Report Completion Api Care Actions  Action Id  Report Completion Post"
+                                                                                                                                                                         }
+                                                                                                                                                          }
+                                                                                                                                 }
+                                                                                                                 },
+                                                                                                         "422":  {
+                                                                                                                     "description":  "Validation Error",
+                                                                                                                     "content":  {
+                                                                                                                                     "application/json":  {
+                                                                                                                                                              "schema":  {
+                                                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                                         }
+                                                                                                                                                          }
+                                                                                                                                 }
+                                                                                                                 }
+                                                                                                     }
+                                                                                   }
+                                                                      },
+                  "/api/care-actions/{action_id}/verify-completion":  {
+                                                                          "post":  {
+                                                                                       "tags":  [
+                                                                                                    "care-actions"
+                                                                                                ],
+                                                                                       "summary":  "Completion Verification",
+                                                                                       "operationId":  "completion_verification_api_care_actions__action_id__verify_completion_post",
+                                                                                       "parameters":  [
+                                                                                                          {
+                                                                                                              "name":  "action_id",
+                                                                                                              "in":  "path",
+                                                                                                              "required":  true,
+                                                                                                              "schema":  {
+                                                                                                                             "type":  "string",
+                                                                                                                             "format":  "uuid",
+                                                                                                                             "title":  "Action Id"
+                                                                                                                         }
+                                                                                                          }
+                                                                                                      ],
+                                                                                       "requestBody":  {
+                                                                                                           "required":  true,
+                                                                                                           "content":  {
+                                                                                                                           "application/json":  {
+                                                                                                                                                    "schema":  {
+                                                                                                                                                                   "$ref":  "#/components/schemas/VerifyCompletionRequest"
+                                                                                                                                                               }
+                                                                                                                                                }
+                                                                                                                       }
+                                                                                                       },
+                                                                                       "responses":  {
+                                                                                                         "200":  {
+                                                                                                                     "description":  "Successful Response",
+                                                                                                                     "content":  {
+                                                                                                                                     "application/json":  {
+                                                                                                                                                              "schema":  {
+                                                                                                                                                                             "type":  "object",
+                                                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                                                             "title":  "Response Completion Verification Api Care Actions  Action Id  Verify Completion Post"
+                                                                                                                                                                         }
+                                                                                                                                                          }
+                                                                                                                                 }
+                                                                                                                 },
+                                                                                                         "422":  {
+                                                                                                                     "description":  "Validation Error",
+                                                                                                                     "content":  {
+                                                                                                                                     "application/json":  {
+                                                                                                                                                              "schema":  {
+                                                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                                         }
+                                                                                                                                                          }
+                                                                                                                                 }
+                                                                                                                 }
+                                                                                                     }
+                                                                                   }
+                                                                      },
+                  "/api/care-events":  {
+                                           "post":  {
+                                                        "tags":  [
+                                                                     "care-events"
+                                                                 ],
+                                                        "summary":  "Care Event",
+                                                        "operationId":  "care_event_api_care_events_post",
+                                                        "requestBody":  {
+                                                                            "content":  {
+                                                                                            "application/json":  {
+                                                                                                                     "schema":  {
+                                                                                                                                    "$ref":  "#/components/schemas/CareEventCreate"
+                                                                                                                                }
+                                                                                                                 }
+                                                                                        },
+                                                                            "required":  true
+                                                                        },
+                                                        "responses":  {
+                                                                          "200":  {
+                                                                                      "description":  "Successful Response",
+                                                                                      "content":  {
+                                                                                                      "application/json":  {
+                                                                                                                               "schema":  {
+                                                                                                                                              "additionalProperties":  true,
+                                                                                                                                              "type":  "object",
+                                                                                                                                              "title":  "Response Care Event Api Care Events Post"
+                                                                                                                                          }
+                                                                                                                           }
+                                                                                                  }
+                                                                                  },
+                                                                          "422":  {
+                                                                                      "description":  "Validation Error",
+                                                                                      "content":  {
+                                                                                                      "application/json":  {
+                                                                                                                               "schema":  {
+                                                                                                                                              "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                          }
+                                                                                                                           }
+                                                                                                  }
+                                                                                  }
+                                                                      }
+                                                    }
+                                       },
+                  "/api/handoffs":  {
+                                        "post":  {
+                                                     "tags":  [
+                                                                  "handoffs"
+                                                              ],
+                                                     "summary":  "Handoff",
+                                                     "operationId":  "handoff_api_handoffs_post",
+                                                     "requestBody":  {
+                                                                         "content":  {
+                                                                                         "application/json":  {
+                                                                                                                  "schema":  {
+                                                                                                                                 "$ref":  "#/components/schemas/HandoffCreate"
+                                                                                                                             }
+                                                                                                              }
+                                                                                     },
+                                                                         "required":  true
+                                                                     },
+                                                     "responses":  {
+                                                                       "201":  {
+                                                                                   "description":  "Successful Response",
+                                                                                   "content":  {
+                                                                                                   "application/json":  {
+                                                                                                                            "schema":  {
+                                                                                                                                           "additionalProperties":  true,
+                                                                                                                                           "type":  "object",
+                                                                                                                                           "title":  "Response Handoff Api Handoffs Post"
+                                                                                                                                       }
+                                                                                                                        }
+                                                                                               }
+                                                                               },
+                                                                       "422":  {
+                                                                                   "description":  "Validation Error",
+                                                                                   "content":  {
+                                                                                                   "application/json":  {
+                                                                                                                            "schema":  {
+                                                                                                                                           "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                       }
+                                                                                                                        }
+                                                                                               }
+                                                                               }
+                                                                   }
+                                                 }
+                                    },
+                  "/api/handoffs/{handoff_id}/send":  {
+                                                          "post":  {
+                                                                       "tags":  [
+                                                                                    "handoffs"
+                                                                                ],
+                                                                       "summary":  "Send",
+                                                                       "operationId":  "send_api_handoffs__handoff_id__send_post",
+                                                                       "parameters":  [
+                                                                                          {
+                                                                                              "name":  "handoff_id",
+                                                                                              "in":  "path",
+                                                                                              "required":  true,
+                                                                                              "schema":  {
+                                                                                                             "type":  "string",
+                                                                                                             "format":  "uuid",
+                                                                                                             "title":  "Handoff Id"
+                                                                                                         }
+                                                                                          }
+                                                                                      ],
+                                                                       "requestBody":  {
+                                                                                           "required":  true,
+                                                                                           "content":  {
+                                                                                                           "application/json":  {
+                                                                                                                                    "schema":  {
+                                                                                                                                                   "$ref":  "#/components/schemas/HandoffEventRequest"
+                                                                                                                                               }
+                                                                                                                                }
+                                                                                                       }
+                                                                                       },
+                                                                       "responses":  {
+                                                                                         "200":  {
+                                                                                                     "description":  "Successful Response",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "type":  "object",
+                                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                                             "title":  "Response Send Api Handoffs  Handoff Id  Send Post"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 },
+                                                                                         "422":  {
+                                                                                                     "description":  "Validation Error",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 }
+                                                                                     }
+                                                                   }
+                                                      },
+                  "/api/handoffs/{handoff_id}/acknowledge":  {
+                                                                 "post":  {
+                                                                              "tags":  [
+                                                                                           "handoffs"
+                                                                                       ],
+                                                                              "summary":  "Acknowledge",
+                                                                              "operationId":  "acknowledge_api_handoffs__handoff_id__acknowledge_post",
+                                                                              "parameters":  [
+                                                                                                 {
+                                                                                                     "name":  "handoff_id",
+                                                                                                     "in":  "path",
+                                                                                                     "required":  true,
+                                                                                                     "schema":  {
+                                                                                                                    "type":  "string",
+                                                                                                                    "format":  "uuid",
+                                                                                                                    "title":  "Handoff Id"
+                                                                                                                }
+                                                                                                 }
+                                                                                             ],
+                                                                              "requestBody":  {
+                                                                                                  "required":  true,
+                                                                                                  "content":  {
+                                                                                                                  "application/json":  {
+                                                                                                                                           "schema":  {
+                                                                                                                                                          "$ref":  "#/components/schemas/HandoffEventRequest"
+                                                                                                                                                      }
+                                                                                                                                       }
+                                                                                                              }
+                                                                                              },
+                                                                              "responses":  {
+                                                                                                "200":  {
+                                                                                                            "description":  "Successful Response",
+                                                                                                            "content":  {
+                                                                                                                            "application/json":  {
+                                                                                                                                                     "schema":  {
+                                                                                                                                                                    "type":  "object",
+                                                                                                                                                                    "additionalProperties":  true,
+                                                                                                                                                                    "title":  "Response Acknowledge Api Handoffs  Handoff Id  Acknowledge Post"
+                                                                                                                                                                }
+                                                                                                                                                 }
+                                                                                                                        }
+                                                                                                        },
+                                                                                                "422":  {
+                                                                                                            "description":  "Validation Error",
+                                                                                                            "content":  {
+                                                                                                                            "application/json":  {
+                                                                                                                                                     "schema":  {
+                                                                                                                                                                    "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                                }
+                                                                                                                                                 }
+                                                                                                                        }
+                                                                                                        }
+                                                                                            }
+                                                                          }
+                                                             },
+                  "/api/exceptions":  {
+                                          "get":  {
+                                                      "tags":  [
+                                                                   "exceptions"
+                                                               ],
+                                                      "summary":  "Exceptions",
+                                                      "operationId":  "exceptions_api_exceptions_get",
+                                                      "parameters":  [
+                                                                         {
+                                                                             "name":  "status",
+                                                                             "in":  "query",
+                                                                             "required":  false,
+                                                                             "schema":  {
+                                                                                            "anyOf":  [
+                                                                                                          {
+                                                                                                              "type":  "string"
+                                                                                                          },
+                                                                                                          {
+                                                                                                              "type":  "null"
+                                                                                                          }
+                                                                                                      ],
+                                                                                            "title":  "Status"
+                                                                                        }
+                                                                         },
+                                                                         {
+                                                                             "name":  "assigned_role",
+                                                                             "in":  "query",
+                                                                             "required":  false,
+                                                                             "schema":  {
+                                                                                            "anyOf":  [
+                                                                                                          {
+                                                                                                              "type":  "string"
+                                                                                                          },
+                                                                                                          {
+                                                                                                              "type":  "null"
+                                                                                                          }
+                                                                                                      ],
+                                                                                            "title":  "Assigned Role"
+                                                                                        }
+                                                                         },
+                                                                         {
+                                                                             "name":  "limit",
+                                                                             "in":  "query",
+                                                                             "required":  false,
+                                                                             "schema":  {
+                                                                                            "type":  "integer",
+                                                                                            "maximum":  100,
+                                                                                            "minimum":  1,
+                                                                                            "default":  20,
+                                                                                            "title":  "Limit"
+                                                                                        }
+                                                                         }
+                                                                     ],
+                                                      "responses":  {
+                                                                        "200":  {
+                                                                                    "description":  "Successful Response",
+                                                                                    "content":  {
+                                                                                                    "application/json":  {
+                                                                                                                             "schema":  {
+                                                                                                                                            "type":  "object",
+                                                                                                                                            "additionalProperties":  true,
+                                                                                                                                            "title":  "Response Exceptions Api Exceptions Get"
+                                                                                                                                        }
+                                                                                                                         }
+                                                                                                }
+                                                                                },
+                                                                        "422":  {
+                                                                                    "description":  "Validation Error",
+                                                                                    "content":  {
+                                                                                                    "application/json":  {
+                                                                                                                             "schema":  {
+                                                                                                                                            "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                        }
+                                                                                                                         }
+                                                                                                }
+                                                                                }
+                                                                    }
+                                                  }
+                                      },
+                  "/api/exceptions/{exception_id}":  {
+                                                         "patch":  {
+                                                                       "tags":  [
+                                                                                    "exceptions"
+                                                                                ],
+                                                                       "summary":  "Patch Exception",
+                                                                       "operationId":  "patch_exception_api_exceptions__exception_id__patch",
+                                                                       "parameters":  [
+                                                                                          {
+                                                                                              "name":  "exception_id",
+                                                                                              "in":  "path",
+                                                                                              "required":  true,
+                                                                                              "schema":  {
+                                                                                                             "type":  "string",
+                                                                                                             "format":  "uuid",
+                                                                                                             "title":  "Exception Id"
+                                                                                                         }
+                                                                                          }
+                                                                                      ],
+                                                                       "requestBody":  {
+                                                                                           "required":  true,
+                                                                                           "content":  {
+                                                                                                           "application/json":  {
+                                                                                                                                    "schema":  {
+                                                                                                                                                   "$ref":  "#/components/schemas/ExceptionPatch"
+                                                                                                                                               }
+                                                                                                                                }
+                                                                                                       }
+                                                                                       },
+                                                                       "responses":  {
+                                                                                         "200":  {
+                                                                                                     "description":  "Successful Response",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "type":  "object",
+                                                                                                                                                             "additionalProperties":  true,
+                                                                                                                                                             "title":  "Response Patch Exception Api Exceptions  Exception Id  Patch"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 },
+                                                                                         "422":  {
+                                                                                                     "description":  "Validation Error",
+                                                                                                     "content":  {
+                                                                                                                     "application/json":  {
+                                                                                                                                              "schema":  {
+                                                                                                                                                             "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                         }
+                                                                                                                                          }
+                                                                                                                 }
+                                                                                                 }
+                                                                                     }
+                                                                   }
+                                                     },
+                  "/api/audit":  {
+                                     "get":  {
+                                                 "tags":  [
+                                                              "audit"
+                                                          ],
+                                                 "summary":  "Audit",
+                                                 "operationId":  "audit_api_audit_get",
+                                                 "parameters":  [
+                                                                    {
+                                                                        "name":  "entity_type",
+                                                                        "in":  "query",
+                                                                        "required":  false,
+                                                                        "schema":  {
+                                                                                       "anyOf":  [
+                                                                                                     {
+                                                                                                         "type":  "string"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "type":  "null"
+                                                                                                     }
+                                                                                                 ],
+                                                                                       "title":  "Entity Type"
+                                                                                   }
+                                                                    },
+                                                                    {
+                                                                        "name":  "entity_id",
+                                                                        "in":  "query",
+                                                                        "required":  false,
+                                                                        "schema":  {
+                                                                                       "anyOf":  [
+                                                                                                     {
+                                                                                                         "type":  "string",
+                                                                                                         "format":  "uuid"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "type":  "null"
+                                                                                                     }
+                                                                                                 ],
+                                                                                       "title":  "Entity Id"
+                                                                                   }
+                                                                    }
+                                                                ],
+                                                 "responses":  {
+                                                                   "200":  {
+                                                                               "description":  "Successful Response",
+                                                                               "content":  {
+                                                                                               "application/json":  {
+                                                                                                                        "schema":  {
+                                                                                                                                       "type":  "object",
+                                                                                                                                       "additionalProperties":  true,
+                                                                                                                                       "title":  "Response Audit Api Audit Get"
+                                                                                                                                   }
+                                                                                                                    }
+                                                                                           }
+                                                                           },
+                                                                   "422":  {
+                                                                               "description":  "Validation Error",
+                                                                               "content":  {
+                                                                                               "application/json":  {
+                                                                                                                        "schema":  {
+                                                                                                                                       "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                   }
+                                                                                                                    }
+                                                                                           }
+                                                                           }
+                                                               }
+                                             }
+                                 },
+                  "/api/ai/classify-message":  {
+                                                   "post":  {
+                                                                "tags":  [
+                                                                             "ai"
+                                                                         ],
+                                                                "summary":  "Classify",
+                                                                "operationId":  "classify_api_ai_classify_message_post",
+                                                                "requestBody":  {
+                                                                                    "content":  {
+                                                                                                    "application/json":  {
+                                                                                                                             "schema":  {
+                                                                                                                                            "$ref":  "#/components/schemas/ClassifyMessageRequest"
+                                                                                                                                        }
+                                                                                                                         }
+                                                                                                },
+                                                                                    "required":  true
+                                                                                },
+                                                                "responses":  {
+                                                                                  "200":  {
+                                                                                              "description":  "Successful Response",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "additionalProperties":  true,
+                                                                                                                                                      "type":  "object",
+                                                                                                                                                      "title":  "Response Classify Api Ai Classify Message Post"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          },
+                                                                                  "422":  {
+                                                                                              "description":  "Validation Error",
+                                                                                              "content":  {
+                                                                                                              "application/json":  {
+                                                                                                                                       "schema":  {
+                                                                                                                                                      "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                  }
+                                                                                                                                   }
+                                                                                                          }
+                                                                                          }
+                                                                              }
+                                                            }
+                                               },
+                  "/api/ai/extract-care-plan":  {
+                                                    "post":  {
+                                                                 "tags":  [
+                                                                              "ai"
+                                                                          ],
+                                                                 "summary":  "Extract",
+                                                                 "operationId":  "extract_api_ai_extract_care_plan_post",
+                                                                 "requestBody":  {
+                                                                                     "content":  {
+                                                                                                     "application/json":  {
+                                                                                                                              "schema":  {
+                                                                                                                                             "$ref":  "#/components/schemas/ExtractCarePlanRequest"
+                                                                                                                                         }
+                                                                                                                          }
+                                                                                                 },
+                                                                                     "required":  true
+                                                                                 },
+                                                                 "responses":  {
+                                                                                   "200":  {
+                                                                                               "description":  "Successful Response",
+                                                                                               "content":  {
+                                                                                                               "application/json":  {
+                                                                                                                                        "schema":  {
+                                                                                                                                                       "additionalProperties":  true,
+                                                                                                                                                       "type":  "object",
+                                                                                                                                                       "title":  "Response Extract Api Ai Extract Care Plan Post"
+                                                                                                                                                   }
+                                                                                                                                    }
+                                                                                                           }
+                                                                                           },
+                                                                                   "422":  {
+                                                                                               "description":  "Validation Error",
+                                                                                               "content":  {
+                                                                                                               "application/json":  {
+                                                                                                                                        "schema":  {
+                                                                                                                                                       "$ref":  "#/components/schemas/HTTPValidationError"
+                                                                                                                                                   }
+                                                                                                                                    }
+                                                                                                           }
+                                                                                           }
+                                                                               }
+                                                             }
+                                                }
+              },
+    "components":  {
+                       "schemas":  {
+                                       "ActionEventRequest":  {
+                                                                  "properties":  {
+                                                                                     "event_id":  {
+                                                                                                      "type":  "string",
+                                                                                                      "format":  "uuid",
+                                                                                                      "title":  "Event Id"
+                                                                                                  },
+                                                                                     "source":  {
+                                                                                                    "type":  "string",
+                                                                                                    "title":  "Source"
+                                                                                                },
+                                                                                     "actor_id":  {
+                                                                                                      "anyOf":  [
+                                                                                                                    {
+                                                                                                                        "type":  "string"
+                                                                                                                    },
+                                                                                                                    {
+                                                                                                                        "type":  "null"
+                                                                                                                    }
+                                                                                                                ],
+                                                                                                      "title":  "Actor Id"
+                                                                                                  },
+                                                                                     "actor_role":  {
+                                                                                                        "type":  "string",
+                                                                                                        "title":  "Actor Role"
+                                                                                                    },
+                                                                                     "occurred_at":  {
+                                                                                                         "type":  "string",
+                                                                                                         "format":  "date-time",
+                                                                                                         "title":  "Occurred At"
+                                                                                                     },
+                                                                                     "payload":  {
+                                                                                                     "additionalProperties":  true,
+                                                                                                     "type":  "object",
+                                                                                                     "title":  "Payload"
+                                                                                                 }
+                                                                                 },
+                                                                  "additionalProperties":  false,
+                                                                  "type":  "object",
+                                                                  "required":  [
+                                                                                   "event_id",
+                                                                                   "source",
+                                                                                   "actor_role",
+                                                                                   "occurred_at"
+                                                                               ],
+                                                                  "title":  "ActionEventRequest"
+                                                              },
+                                       "Actor":  {
+                                                     "properties":  {
+                                                                        "id":  {
+                                                                                   "anyOf":  [
+                                                                                                 {
+                                                                                                     "type":  "string"
+                                                                                                 },
+                                                                                                 {
+                                                                                                     "type":  "null"
+                                                                                                 }
+                                                                                             ],
+                                                                                   "title":  "Id"
+                                                                               },
+                                                                        "role":  {
+                                                                                     "type":  "string",
+                                                                                     "title":  "Role"
+                                                                                 }
+                                                                    },
+                                                     "type":  "object",
+                                                     "required":  [
+                                                                      "role"
+                                                                  ],
+                                                     "title":  "Actor"
+                                                 },
+                                       "CareEventCreate":  {
+                                                               "properties":  {
+                                                                                  "event_id":  {
+                                                                                                   "type":  "string",
+                                                                                                   "format":  "uuid",
+                                                                                                   "title":  "Event Id"
+                                                                                               },
+                                                                                  "event_type":  {
+                                                                                                     "type":  "string",
+                                                                                                     "enum":  [
+                                                                                                                  "ACTION_STARTED",
+                                                                                                                  "COMPLETION_REPORTED",
+                                                                                                                  "COMPLETION_VERIFIED",
+                                                                                                                  "HANDOFF_SENT",
+                                                                                                                  "HANDOFF_ACKNOWLEDGED",
+                                                                                                                  "HANDOFF_REJECTED",
+                                                                                                                  "BARRIER_REPORTED",
+                                                                                                                  "RESCHEDULE_REQUESTED"
+                                                                                                              ],
+                                                                                                     "title":  "Event Type"
+                                                                                                 },
+                                                                                  "action_id":  {
+                                                                                                    "anyOf":  [
+                                                                                                                  {
+                                                                                                                      "type":  "string",
+                                                                                                                      "format":  "uuid"
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                      "type":  "null"
+                                                                                                                  }
+                                                                                                              ],
+                                                                                                    "title":  "Action Id"
+                                                                                                },
+                                                                                  "handoff_id":  {
+                                                                                                     "anyOf":  [
+                                                                                                                   {
+                                                                                                                       "type":  "string",
+                                                                                                                       "format":  "uuid"
+                                                                                                                   },
+                                                                                                                   {
+                                                                                                                       "type":  "null"
+                                                                                                                   }
+                                                                                                               ],
+                                                                                                     "title":  "Handoff Id"
+                                                                                                 },
+                                                                                  "source":  {
+                                                                                                 "type":  "string",
+                                                                                                 "enum":  [
+                                                                                                              "PATIENT",
+                                                                                                              "DEPARTMENT",
+                                                                                                              "CARE_COORDINATOR",
+                                                                                                              "DEPARTMENT_SIMULATOR",
+                                                                                                              "SYSTEM"
+                                                                                                          ],
+                                                                                                 "title":  "Source"
+                                                                                             },
+                                                                                  "actor":  {
+                                                                                                "$ref":  "#/components/schemas/Actor"
+                                                                                            },
+                                                                                  "occurred_at":  {
+                                                                                                      "type":  "string",
+                                                                                                      "format":  "date-time",
+                                                                                                      "title":  "Occurred At"
+                                                                                                  },
+                                                                                  "payload":  {
+                                                                                                  "additionalProperties":  true,
+                                                                                                  "type":  "object",
+                                                                                                  "title":  "Payload"
+                                                                                              }
+                                                                              },
+                                                               "additionalProperties":  false,
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "event_id",
+                                                                                "event_type",
+                                                                                "source",
+                                                                                "actor",
+                                                                                "occurred_at"
+                                                                            ],
+                                                               "title":  "CareEventCreate"
+                                                           },
+                                       "CarePlanCreate":  {
+                                                              "properties":  {
+                                                                                 "patient_id":  {
+                                                                                                    "type":  "string",
+                                                                                                    "format":  "uuid",
+                                                                                                    "title":  "Patient Id"
+                                                                                                },
+                                                                                 "source_text":  {
+                                                                                                     "anyOf":  [
+                                                                                                                   {
+                                                                                                                       "type":  "string"
+                                                                                                                   },
+                                                                                                                   {
+                                                                                                                       "type":  "null"
+                                                                                                                   }
+                                                                                                               ],
+                                                                                                     "title":  "Source Text"
+                                                                                                 },
+                                                                                 "created_by":  {
+                                                                                                    "type":  "string",
+                                                                                                    "title":  "Created By",
+                                                                                                    "default":  "demo-coordinator"
+                                                                                                }
+                                                                             },
+                                                              "additionalProperties":  false,
+                                                              "type":  "object",
+                                                              "required":  [
+                                                                               "patient_id"
+                                                                           ],
+                                                              "title":  "CarePlanCreate"
+                                                          },
+                                       "ClassifyMessageRequest":  {
+                                                                      "properties":  {
+                                                                                         "message":  {
+                                                                                                         "type":  "string",
+                                                                                                         "title":  "Message"
+                                                                                                     },
+                                                                                         "action_id":  {
+                                                                                                           "anyOf":  [
+                                                                                                                         {
+                                                                                                                             "type":  "string",
+                                                                                                                             "format":  "uuid"
+                                                                                                                         },
+                                                                                                                         {
+                                                                                                                             "type":  "null"
+                                                                                                                         }
+                                                                                                                     ],
+                                                                                                           "title":  "Action Id"
+                                                                                                       }
+                                                                                     },
+                                                                      "additionalProperties":  false,
+                                                                      "type":  "object",
+                                                                      "required":  [
+                                                                                       "message"
+                                                                                   ],
+                                                                      "title":  "ClassifyMessageRequest"
+                                                                  },
+                                       "ExceptionPatch":  {
+                                                              "properties":  {
+                                                                                 "status":  {
+                                                                                                "type":  "string",
+                                                                                                "enum":  [
+                                                                                                             "IN_PROGRESS",
+                                                                                                             "RESOLVED",
+                                                                                                             "DISMISSED"
+                                                                                                         ],
+                                                                                                "title":  "Status"
+                                                                                            },
+                                                                                 "assigned_role":  {
+                                                                                                       "anyOf":  [
+                                                                                                                     {
+                                                                                                                         "type":  "string"
+                                                                                                                     },
+                                                                                                                     {
+                                                                                                                         "type":  "null"
+                                                                                                                     }
+                                                                                                                 ],
+                                                                                                       "title":  "Assigned Role"
+                                                                                                   },
+                                                                                 "resolution_note":  {
+                                                                                                         "anyOf":  [
+                                                                                                                       {
+                                                                                                                           "type":  "string"
+                                                                                                                       },
+                                                                                                                       {
+                                                                                                                           "type":  "null"
+                                                                                                                       }
+                                                                                                                   ],
+                                                                                                         "title":  "Resolution Note"
+                                                                                                     },
+                                                                                 "actor_id":  {
+                                                                                                  "type":  "string",
+                                                                                                  "title":  "Actor Id",
+                                                                                                  "default":  "demo-coordinator"
+                                                                                              }
+                                                                             },
+                                                              "additionalProperties":  false,
+                                                              "type":  "object",
+                                                              "required":  [
+                                                                               "status"
+                                                                           ],
+                                                              "title":  "ExceptionPatch"
+                                                          },
+                                       "ExtractCarePlanRequest":  {
+                                                                      "properties":  {
+                                                                                         "source_text":  {
+                                                                                                             "type":  "string",
+                                                                                                             "title":  "Source Text"
+                                                                                                         },
+                                                                                         "plan_id":  {
+                                                                                                         "type":  "string",
+                                                                                                         "format":  "uuid",
+                                                                                                         "title":  "Plan Id"
+                                                                                                     }
+                                                                                     },
+                                                                      "additionalProperties":  false,
+                                                                      "type":  "object",
+                                                                      "required":  [
+                                                                                       "source_text",
+                                                                                       "plan_id"
+                                                                                   ],
+                                                                      "title":  "ExtractCarePlanRequest"
+                                                                  },
+                                       "HTTPValidationError":  {
+                                                                   "properties":  {
+                                                                                      "detail":  {
+                                                                                                     "items":  {
+                                                                                                                   "$ref":  "#/components/schemas/ValidationError"
+                                                                                                               },
+                                                                                                     "type":  "array",
+                                                                                                     "title":  "Detail"
+                                                                                                 }
+                                                                                  },
+                                                                   "type":  "object",
+                                                                   "title":  "HTTPValidationError"
+                                                               },
+                                       "HandoffCreate":  {
+                                                             "properties":  {
+                                                                                "action_id":  {
+                                                                                                  "type":  "string",
+                                                                                                  "format":  "uuid",
+                                                                                                  "title":  "Action Id"
+                                                                                              },
+                                                                                "recipient_role":  {
+                                                                                                       "type":  "string",
+                                                                                                       "title":  "Recipient Role"
+                                                                                                   },
+                                                                                "recipient_id":  {
+                                                                                                     "anyOf":  [
+                                                                                                                   {
+                                                                                                                       "type":  "string"
+                                                                                                                   },
+                                                                                                                   {
+                                                                                                                       "type":  "null"
+                                                                                                                   }
+                                                                                                               ],
+                                                                                                     "title":  "Recipient Id"
+                                                                                                 },
+                                                                                "deadline_at":  {
+                                                                                                    "type":  "string",
+                                                                                                    "format":  "date-time",
+                                                                                                    "title":  "Deadline At"
+                                                                                                }
+                                                                            },
+                                                             "additionalProperties":  false,
+                                                             "type":  "object",
+                                                             "required":  [
+                                                                              "action_id",
+                                                                              "recipient_role",
+                                                                              "deadline_at"
+                                                                          ],
+                                                             "title":  "HandoffCreate"
+                                                         },
+                                       "HandoffEventRequest":  {
+                                                                   "properties":  {
+                                                                                      "event_id":  {
+                                                                                                       "type":  "string",
+                                                                                                       "format":  "uuid",
+                                                                                                       "title":  "Event Id"
+                                                                                                   },
+                                                                                      "actor_id":  {
+                                                                                                       "anyOf":  [
+                                                                                                                     {
+                                                                                                                         "type":  "string"
+                                                                                                                     },
+                                                                                                                     {
+                                                                                                                         "type":  "null"
+                                                                                                                     }
+                                                                                                                 ],
+                                                                                                       "title":  "Actor Id"
+                                                                                                   },
+                                                                                      "actor_role":  {
+                                                                                                         "type":  "string",
+                                                                                                         "title":  "Actor Role"
+                                                                                                     },
+                                                                                      "occurred_at":  {
+                                                                                                          "type":  "string",
+                                                                                                          "format":  "date-time",
+                                                                                                          "title":  "Occurred At"
+                                                                                                      },
+                                                                                      "payload":  {
+                                                                                                      "additionalProperties":  true,
+                                                                                                      "type":  "object",
+                                                                                                      "title":  "Payload",
+                                                                                                      "default":  {
+
+                                                                                                                  }
+                                                                                                  }
+                                                                                  },
+                                                                   "additionalProperties":  false,
+                                                                   "type":  "object",
+                                                                   "required":  [
+                                                                                    "event_id",
+                                                                                    "actor_role",
+                                                                                    "occurred_at"
+                                                                                ],
+                                                                   "title":  "HandoffEventRequest"
+                                                               },
+                                       "ValidationError":  {
+                                                               "properties":  {
+                                                                                  "loc":  {
+                                                                                              "items":  {
+                                                                                                            "anyOf":  [
+                                                                                                                          {
+                                                                                                                              "type":  "string"
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "type":  "integer"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                        },
+                                                                                              "type":  "array",
+                                                                                              "title":  "Location"
+                                                                                          },
+                                                                                  "msg":  {
+                                                                                              "type":  "string",
+                                                                                              "title":  "Message"
+                                                                                          },
+                                                                                  "type":  {
+                                                                                               "type":  "string",
+                                                                                               "title":  "Error Type"
+                                                                                           },
+                                                                                  "input":  {
+                                                                                                "title":  "Input"
+                                                                                            },
+                                                                                  "ctx":  {
+                                                                                              "type":  "object",
+                                                                                              "title":  "Context"
+                                                                                          }
+                                                                              },
+                                                               "type":  "object",
+                                                               "required":  [
+                                                                                "loc",
+                                                                                "msg",
+                                                                                "type"
+                                                                            ],
+                                                               "title":  "ValidationError"
+                                                           },
+                                       "VerifyCompletionRequest":  {
+                                                                       "properties":  {
+                                                                                          "event_id":  {
+                                                                                                           "type":  "string",
+                                                                                                           "format":  "uuid",
+                                                                                                           "title":  "Event Id"
+                                                                                                       },
+                                                                                          "evidence_id":  {
+                                                                                                              "type":  "string",
+                                                                                                              "format":  "uuid",
+                                                                                                              "title":  "Evidence Id"
+                                                                                                          },
+                                                                                          "verification_note":  {
+                                                                                                                    "type":  "string",
+                                                                                                                    "title":  "Verification Note"
+                                                                                                                },
+                                                                                          "actor_id":  {
+                                                                                                           "type":  "string",
+                                                                                                           "title":  "Actor Id",
+                                                                                                           "default":  "demo-coordinator"
+                                                                                                       },
+                                                                                          "actor_role":  {
+                                                                                                             "type":  "string",
+                                                                                                             "title":  "Actor Role",
+                                                                                                             "default":  "CARE_COORDINATOR"
+                                                                                                         }
+                                                                                      },
+                                                                       "additionalProperties":  false,
+                                                                       "type":  "object",
+                                                                       "required":  [
+                                                                                        "event_id",
+                                                                                        "evidence_id",
+                                                                                        "verification_note"
+                                                                                    ],
+                                                                       "title":  "VerifyCompletionRequest"
+                                                                   }
+                                   }
+                   }
+}
