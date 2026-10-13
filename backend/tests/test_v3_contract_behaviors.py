@@ -180,6 +180,69 @@ def test_completion_reporting_cannot_bypass_verification() -> None:
     assert response.json()["data"]["action"]["status"] != "VERIFIED_COMPLETE"
 
 
+def test_care_journey_returns_persisted_handoffs_and_active_exceptions(
+    monkeypatch,
+) -> None:
+    from types import SimpleNamespace
+
+    from app.services import patient_service
+    from app.seed.demo_data import DEMO_ECG_ACTION_ID, DEMO_PATIENT_ID
+
+    monkeypatch.setattr(
+        patient_service,
+        "get_settings",
+        lambda: SimpleNamespace(supabase_configured=False),
+    )
+    database = get_database()
+    handoff_id = str(uuid4())
+    now = datetime.now(UTC)
+    database.handoffs[handoff_id] = {
+        "id": handoff_id,
+        "action_id": DEMO_ECG_ACTION_ID,
+        "recipient_role": "CARDIOLOGY",
+        "recipient_id": None,
+        "status": "PENDING",
+        "sent_at": None,
+        "acknowledged_at": None,
+        "acknowledged_by": None,
+        "deadline_at": now,
+        "rejection_reason": None,
+        "created_at": now,
+    }
+    exception_ids = {}
+    for status in ("OPEN", "IN_PROGRESS", "RESOLVED", "DISMISSED"):
+        exception_id = str(uuid4())
+        exception_ids[status] = exception_id
+        database.exceptions[exception_id] = {
+            "id": exception_id,
+            "action_id": DEMO_ECG_ACTION_ID,
+            "handoff_id": handoff_id,
+            "exception_type": "HANDOFF_OVERDUE",
+            "status": status,
+            "assigned_role": "CARDIOLOGY",
+            "reason": f"{status} test exception.",
+            "resolution_note": None,
+            "created_at": now,
+            "resolved_at": None,
+            "resolved_by": None,
+        }
+    response = TestClient(app).get(
+        f"/api/patients/{DEMO_PATIENT_ID}/care-journey"
+    )
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert [handoff["id"] for handoff in data["handoffs"]] == [handoff_id]
+    assert {
+        exception["status"] for exception in data["active_exceptions"]
+    } == {"OPEN", "IN_PROGRESS"}
+    assert {exception["id"] for exception in data["active_exceptions"]} == {
+        exception_ids["OPEN"],
+        exception_ids["IN_PROGRESS"],
+    }
+    assert data["open_exception_count"] == 2
+
+
 def test_handoff_ack_and_reject_follow_distinct_valid_transitions() -> None:
     action_id = _make_action(str(uuid4()), status="READY")
     handoff_id = _make_handoff(action_id)

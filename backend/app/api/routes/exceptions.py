@@ -14,8 +14,10 @@ def exceptions(
     status: str | None = Query(default=None),
     assigned_role: str | None = Query(default=None),
     limit: int = Query(default=20, ge=1, le=100),
+    cursor: str | None = Query(default=None),
 ) -> dict:
-    return success_response({"items": list_exceptions(status, assigned_role, limit), "next_cursor": None})
+    items, next_cursor = list_exceptions(status, assigned_role, limit, cursor)
+    return success_response({"items": items, "next_cursor": next_cursor})
 
 
 @router.patch("/exceptions/{exception_id}")

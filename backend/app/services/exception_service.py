@@ -3,17 +3,18 @@ from uuid import UUID
 
 from ..core.database import get_database
 from ..core.exceptions import CareLoopError
+from ..repositories.exception_repository import list_exceptions as read_exceptions
 from ..schemas.exception import ExceptionPatch
 from .audit_service import record_audit
 
 
-def list_exceptions(status: str | None, assigned_role: str | None, limit: int) -> list[dict]:
-    items = list(get_database().exceptions.values())
-    if status:
-        items = [item for item in items if item["status"] == status]
-    if assigned_role:
-        items = [item for item in items if item["assigned_role"] == assigned_role]
-    return items[:limit]
+def list_exceptions(
+    status: str | None,
+    assigned_role: str | None,
+    limit: int,
+    cursor: str | None = None,
+) -> tuple[list[dict], str | None]:
+    return read_exceptions(status, assigned_role, limit, cursor)
 
 
 def update_exception(exception_id: UUID, payload: ExceptionPatch) -> dict:
